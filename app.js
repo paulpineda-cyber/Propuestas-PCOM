@@ -393,4 +393,5 @@ function logoSVG() {
   return `<img src="logo_pcom.png" style="height:36px;" alt="Propiedades.com">`;
 }
 
+// ── Export PDF ────────────────────────────────
 function exportPDF() {
