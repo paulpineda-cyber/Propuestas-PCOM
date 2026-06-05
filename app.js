@@ -399,6 +399,10 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
+  // Forzar ancho correcto antes de capturar
+  element.style.width = '794px';
+  element.style.transform = 'none';
+
   const opt = {
     margin: 0,
     filename: filename,
@@ -407,16 +411,21 @@ function exportPDF() {
       scale: 2, 
       useCORS: true, 
       logging: false,
-      scrollY: 0,
-      windowWidth: 794
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      width: 794,
+      windowWidth: 1200
     },
     jsPDF: { 
-      unit: 'px', 
-      format: [794, element.scrollHeight], 
-      orientation: 'portrait',
-      hotfixes: ['px_scaling']
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait'
     }
   };
 
-  html2pdf().set(opt).from(element).save();
+  html2pdf().set(opt).from(element).save().then(() => {
+    // Restaurar estilos mobile si aplica
+    element.style.width = '';
+    element.style.transform = '';
+  });
 }
