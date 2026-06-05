@@ -399,9 +399,18 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  // Forzar ancho correcto antes de capturar
-  element.style.width = '794px';
-  element.style.transform = 'none';
+  // Inyectar estilo temporal que anula el media query móvil
+  const styleOverride = document.createElement('style');
+  styleOverride.id = 'pdf-override';
+  styleOverride.innerHTML = `
+    #proposal-doc {
+      width: 794px !important;
+      transform: none !important;
+      margin: 0 !important;
+      padding: 48px 56px 56px !important;
+    }
+  `;
+  document.head.appendChild(styleOverride);
 
   const opt = {
     margin: 0,
@@ -413,7 +422,6 @@ function exportPDF() {
       logging: false,
       scrollX: 0,
       scrollY: -window.scrollY,
-      width: 794,
       windowWidth: 1200
     },
     jsPDF: { 
@@ -424,8 +432,6 @@ function exportPDF() {
   };
 
   html2pdf().set(opt).from(element).save().then(() => {
-    // Restaurar estilos mobile si aplica
-    element.style.width = '';
-    element.style.transform = '';
+    document.getElementById('pdf-override').remove();
   });
 }
