@@ -711,6 +711,23 @@
     .preview-area { background: white; padding: 0; }
     #proposal-doc { box-shadow: none; }
   }
+  @media (max-width: 768px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: relative;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-area {
+    padding: 16px;
+    overflow-x: auto;
+  }
+}
 </style>
 </head>
 <body>
