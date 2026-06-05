@@ -137,7 +137,7 @@ function planCardHTML(prices, periodo, isMain) {
     <li><span class="feature-icon green">${checkSVG()}</span>Visibilidad en <strong>+2 millones</strong> de visitas mensuales</li>`;
 
   return `
-  <div class="plan-card">
+  <div class="plan-card ${isElite ? 'elite-card' : 'elite-card'}">
     <div class="plan-card-header ${cardClass}">
       <div class="plan-card-header-left">
         <span class="plan-card-icon">⭐</span>
@@ -177,7 +177,7 @@ function compCardHTML(comp) {
   const avisosClass = isD ? '' : 'prime-color';
 
   return `
-  <div class="plan-card">
+  <div class="plan-card ${isElite ? 'elite-card' : 'elite-card'}">
     <div class="plan-card-header ${headerClass}">
       <div class="plan-card-header-left">
         <span class="plan-card-icon">${icon}</span>
