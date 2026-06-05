@@ -406,35 +406,41 @@ function exportPDF() {
       width: 794px !important;
       transform: none !important;
       margin: 0 !important;
-      position: relative !important;
-      left: 0 !important;
+      padding: 48px 56px 56px !important;
+      position: static !important;
+      left: auto !important;
     }
   `;
   document.head.appendChild(styleOverride);
 
-  const height = element.scrollHeight;
+  setTimeout(() => {
+    const height = element.scrollHeight;
+    const opt = {
+      margin: 0,
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 794,
+        windowHeight: height,
+        x: 0,
+        y: 0,
+        width: 794,
+        height: height
+      },
+      jsPDF: {
+        unit: 'px',
+        format: [794, height],
+        orientation: 'portrait'
+      }
+    };
 
-  const opt = {
-    margin: 0,
-    filename: filename,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { 
-      scale: 2, 
-      useCORS: true, 
-      logging: false,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: 794,
-      windowHeight: height
-    },
-    jsPDF: { 
-      unit: 'px', 
-      format: [794, height], 
-      orientation: 'portrait'
-    }
-  };
-
-  html2pdf().set(opt).from(element).save().then(() => {
-    document.getElementById('pdf-override').remove();
-  });
+    html2pdf().set(opt).from(element).save().then(() => {
+      document.getElementById('pdf-override').remove();
+    });
+  }, 300);
 }
