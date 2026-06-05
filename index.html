@@ -718,9 +718,24 @@
   }
 
   .preview-area {
-    padding: 16px;
-    overflow-x: auto;
+    padding: 16px 0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
+  .preview-label {
+    padding-left: 16px;
+    align-self: flex-start;
+  }
+
+  #proposal-doc {
+    transform-origin: top center;
+    transform: scale(0.45);
+    margin-bottom: calc((794px * 0.45 - 794px));
+  }
+}
 }
 </style>
 </head>
