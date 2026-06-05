@@ -388,13 +388,7 @@ function render() {
 
 // ── Logo SVG ──────────────────────────────────
 function logoSVG() {
-  return `<svg width="220" height="40" viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="16" cy="20" r="16" fill="#1a3a2a"/>
-    <path d="M10 26V17l6-4 6 4v9" stroke="#52b788" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
-    <rect x="13.5" y="20" width="5" height="6" rx="1" fill="#52b788"/>
-    <text x="38" y="26" font-family="DM Sans, sans-serif" font-weight="800" font-size="20" fill="#1a3a2a">Propiedades</text>
-    <text x="164" y="26" font-family="DM Sans, sans-serif" font-weight="800" font-size="20" fill="#52b788">.com</text>
-  </svg>`;
+  return `<img src="logo_pcom.png" style="height:36px;" alt="Propiedades.com">`;
 }
 
 // ── Export PDF ────────────────────────────────
