@@ -389,35 +389,29 @@ function render() {
 }
 
 // ── Logo SVG ──────────────────────────────────
-function logoSVG() {
-  return `<img src="logo_pcom.png" style="height:36px;" alt="Propiedades.com">`;
-}
-
-// ── Export PDF ────────────────────────────────
 function exportPDF() {
   const element = document.getElementById('proposal-doc');
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  // Guardar estilos originales
-  const originalStyle = element.getAttribute('style') || '';
-
-  // Forzar estilos correctos directamente en el elemento
-  element.style.cssText = `
-    width: 794px !important;
-    transform: none !important;
-    transform-origin: top left !important;
-    margin: 0 !important;
-    margin-left: 0 !important;
-    margin-bottom: 0 !important;
-    padding: 48px 56px 56px !important;
-    position: static !important;
-    left: auto !important;
-    box-shadow: none !important;
+  // Clonar el documento fuera de pantalla
+  const clone = element.cloneNode(true);
+  clone.style.cssText = `
+    position: fixed;
+    top: -9999px;
+    left: 0;
+    width: 794px;
+    padding: 48px 56px 56px;
+    background: white;
+    transform: none;
+    margin: 0;
+    z-index: -1;
+    font-family: 'Inter', sans-serif;
   `;
+  document.body.appendChild(clone);
 
   setTimeout(() => {
-    const height = element.scrollHeight;
+    const height = clone.scrollHeight;
 
     const opt = {
       margin: 0,
@@ -441,9 +435,8 @@ function exportPDF() {
       }
     };
 
-    html2pdf().set(opt).from(element).save().then(() => {
-      // Restaurar estilo original
-      element.setAttribute('style', originalStyle);
+    html2pdf().set(opt).from(clone).save().then(() => {
+      document.body.removeChild(clone);
     });
   }, 300);
 }
