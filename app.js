@@ -186,7 +186,7 @@ function compCardHTML(comp) {
           <div class="plan-card-desc">${desc}</div>
         </div>
       </div>
-      <span class="plan-card-badge badge-complemento">COMPLEMENTO</span>
+      <span class="plan-card-badge ${isD ? 'badge-complemento-destacados' : 'badge-complemento-prime'}">COMPLEMENTO</span>
     </div>
     <div class="plan-card-body">
       ${priceBlockHTML(comp)}
