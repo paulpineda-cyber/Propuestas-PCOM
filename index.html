@@ -356,7 +356,7 @@
     border: 1.5px solid #e5e7eb;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
   }
 
   .plan-card-header {
@@ -414,6 +414,7 @@
 
   .plan-card-body {
     padding: 16px;
+    text-align: center;
   }
 
   /* ── DOC: PRICE ── */
@@ -437,9 +438,13 @@
   .price-row { display: flex; align-items: baseline; gap: 3px; }
 
   .price-main {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 800;
     color: #111827;
+  }
+
+.price-row {
+    justify-content: center;
   }
 
   .price-iva {
@@ -458,7 +463,7 @@
   }
 
   .inventory-value {
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 800;
     color: var(--green-brand);
     text-align: center;
@@ -553,14 +558,20 @@
 
   /* ── DOC: VIGENCIA ── */
   .vigencia-box {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    border-radius: 10px;
-    padding: 12px 18px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 8px 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 28px;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+.vigencia-text {
+    font-size: 12px;
+    color: #1e40af;
+    font-weight: 500;
   }
 
   .vigencia-icon { font-size: 18px; }
