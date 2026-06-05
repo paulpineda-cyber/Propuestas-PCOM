@@ -396,50 +396,44 @@ function exportPDF() {
 
   const clone = element.cloneNode(true);
   clone.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 794px !important;
-    padding: 48px 56px 56px !important;
-    background: white;
-    transform: none !important;
-    margin: 0 !important;
-    font-family: 'Inter', sans-serif;
-    visibility: visible;
-  `;
-
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = `
     position: fixed;
-    top: 0;
-    left: -9999px;
+    top: -9999px;
+    left: 0;
     width: 794px;
-    overflow: visible;
-    z-index: -1000;
+    padding: 48px 56px 56px;
+    background: white;
+    transform: none;
+    margin: 0;
+    z-index: -1;
+    font-family: 'Inter', sans-serif;
   `;
-  wrapper.appendChild(clone);
-  document.body.appendChild(wrapper);
+  document.body.appendChild(clone);
 
   setTimeout(() => {
-    html2canvas(clone, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      width: 794,
-      windowWidth: 794,
-      scrollX: 0,
-      scrollY: 0
-    }).then(canvas => {
-      const imgData = canvas.toDataURL('image/jpeg', 0.98);
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({
+    const height = clone.scrollHeight;
+    const opt = {
+      margin: 0,
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 794,
+        windowHeight: height,
+        width: 794,
+        height: height
+      },
+      jsPDF: {
         unit: 'px',
-        format: [794, canvas.height / 2],
+        format: [794, height],
         orientation: 'portrait'
-      });
-      pdf.addImage(imgData, 'JPEG', 0, 0, 794, canvas.height / 2);
-      pdf.save(filename);
-      document.body.removeChild(wrapper);
+      }
+    };
+    html2pdf().set(opt).from(clone).save().then(() => {
+      document.body.removeChild(clone);
     });
-  }, 500);
+  }, 300);
 }
