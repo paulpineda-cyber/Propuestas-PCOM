@@ -389,51 +389,8 @@ function render() {
 }
 
 // ── Logo SVG ──────────────────────────────────
-function exportPDF() {
-  const element = document.getElementById('proposal-doc');
-  const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
-  const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
-
-  const clone = element.cloneNode(true);
-  clone.style.cssText = `
-    position: fixed;
-    top: -9999px;
-    left: 0;
-    width: 794px;
-    padding: 48px 56px 56px;
-    background: white;
-    transform: none;
-    margin: 0;
-    z-index: -1;
-    font-family: 'Inter', sans-serif;
-  `;
-  document.body.appendChild(clone);
-
-  setTimeout(() => {
-    const height = clone.scrollHeight;
-    const opt = {
-      margin: 0,
-      filename: filename,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: 794,
-        windowHeight: height,
-        width: 794,
-        height: height
-      },
-      jsPDF: {
-        unit: 'px',
-        format: [794, height],
-        orientation: 'portrait'
-      }
-    };
-    html2pdf().set(opt).from(clone).save().then(() => {
-      document.body.removeChild(clone);
-    });
-  }, 300);
+function logoSVG() {
+  return `<img src="logo_pcom.png" style="height:36px;" alt="Propiedades.com">`;
 }
+
+function exportPDF() {
