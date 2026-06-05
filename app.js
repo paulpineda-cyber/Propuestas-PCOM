@@ -394,49 +394,52 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  // Clonar el documento fuera de pantalla
   const clone = element.cloneNode(true);
   clone.style.cssText = `
-    position: fixed;
-    top: -9999px;
+    position: absolute;
+    top: 0;
     left: 0;
-    width: 794px;
-    padding: 48px 56px 56px;
+    width: 794px !important;
+    padding: 48px 56px 56px !important;
     background: white;
-    transform: none;
-    margin: 0;
-    z-index: -1;
+    transform: none !important;
+    margin: 0 !important;
     font-family: 'Inter', sans-serif;
+    visibility: visible;
   `;
-  document.body.appendChild(clone);
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: -9999px;
+    width: 794px;
+    overflow: visible;
+    z-index: -1000;
+  `;
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
 
   setTimeout(() => {
-    const height = clone.scrollHeight;
-
-    const opt = {
-      margin: 0,
-      filename: filename,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: 794,
-        windowHeight: height,
-        width: 794,
-        height: height
-      },
-      jsPDF: {
+    html2canvas(clone, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      width: 794,
+      windowWidth: 794,
+      scrollX: 0,
+      scrollY: 0
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
         unit: 'px',
-        format: [794, height],
+        format: [794, canvas.height / 2],
         orientation: 'portrait'
-      }
-    };
-
-    html2pdf().set(opt).from(clone).save().then(() => {
-      document.body.removeChild(clone);
+      });
+      pdf.addImage(imgData, 'JPEG', 0, 0, 794, canvas.height / 2);
+      pdf.save(filename);
+      document.body.removeChild(wrapper);
     });
-  }, 300);
+  }, 500);
 }
