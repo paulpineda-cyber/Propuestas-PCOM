@@ -402,8 +402,10 @@ function exportPDF() {
   const clone = element.cloneNode(true);
   clone.style.cssText = `
     position: fixed;
-    top: -9999px;
+    top: 0;
     left: 0;
+    opacity: 0;
+    pointer-events: none;
     width: 794px;
     padding: 48px 56px 56px;
     background: white;
