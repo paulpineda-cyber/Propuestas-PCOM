@@ -704,13 +704,7 @@
   .sidebar::-webkit-scrollbar { width: 4px; }
   .sidebar::-webkit-scrollbar-track { background: transparent; }
   .sidebar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
-
-  @media print {
-    .sidebar, .preview-label, .preview-area > *:not(#proposal-doc) { display: none !important; }
-    .app { grid-template-columns: 1fr; }
-    .preview-area { background: white; padding: 0; }
-    #proposal-doc { box-shadow: none; }
-  }
+  
   @media (max-width: 768px) {
   .app {
     grid-template-columns: 1fr;
