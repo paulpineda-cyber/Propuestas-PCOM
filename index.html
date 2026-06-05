@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Propuestas · Propiedades.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --green-dark: #1a3a2a;
+    --green-mid: #2d6a4f;
+    --green-brand: #3a7d5c;
+    --green-light: #52b788;
+    --gold-dark: #8b6914;
+    --gold-mid: #b8860b;
+    --gold-light: #d4a017;
+    --gold-bg: #fdf6e3;
+    --blue-dark: #1a2a4a;
+    --blue-mid: #1e3a6e;
+    --blue-light: #2563eb;
+    --blue-bg: #eff6ff;
+    --red-price: #dc2626;
+    --success-green: #16a34a;
+    --text-dark: #111827;
+    --text-mid: #374151;
+    --text-light: #6b7280;
+    --border: #e5e7eb;
+    --bg-page: #f8fafc;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  .app {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 24px;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-logo svg { width: 28px; height: 28px; }
+
+  .sidebar-logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--green-dark);
+  }
+
+  .sidebar-subtitle {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION ── */
+  .form-section {
+    margin-bottom: 24px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  /* ── FIELD ── */
+  .field { margin-bottom: 14px; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-mid);
+    margin-bottom: 5px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-dark);
+    background: var(--white);
+    transition: border-color .15s;
+    outline: none;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--green-light);
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── PERIOD SELECTOR ── */
+  .period-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .period-btn {
+    padding: 9px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-mid);
+    background: var(--white);
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+  }
+
+  .period-btn.active {
+    border-color: var(--green-brand);
+    background: #f0faf4;
+    color: var(--green-dark);
+  }
+
+  /* ── TOGGLE ROWS ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toggle-row:last-child { border-bottom: none; }
+
+  .toggle-info { display: flex; flex-direction: column; gap: 2px; }
+
+  .toggle-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .toggle-desc {
+    font-size: 11px;
+    color: var(--text-light);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: #d1d5db;
+    border-radius: 11px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .toggle-track::before {
+    content: '';
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+
+  .toggle-switch input:checked + .toggle-track {
+    background: var(--green-brand);
+  }
+
+  .toggle-switch input:checked + .toggle-track::before {
+    transform: translateX(18px);
+  }
+
+  /* ── COMPLEMENT FIELDS ── */
+  .complement-fields {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .complement-fields.visible { display: block; }
+
+  .complement-fields .field-row { grid-template-columns: 1fr 1fr; }
+
+  /* ── EXPORT BUTTON ── */
+  .export-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--green-dark);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .2s, transform .1s;
+    margin-top: 8px;
+  }
+
+  .export-btn:hover { background: var(--green-mid); }
+  .export-btn:active { transform: scale(.98); }
+
+  /* ── PREVIEW AREA ── */
+  .preview-area {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #e8edf2;
+    min-height: 100vh;
+  }
+
+  .preview-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 16px;
+    align-self: flex-start;
+  }
+
+  /* ── DOCUMENT ── */
+  #proposal-doc {
+    background: white;
+    width: 794px;
+    min-height: 1123px;
+    box-shadow: var(--shadow-lg);
+    border-radius: 4px;
+    padding: 48px 56px 56px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── DOC: HEADER ── */
+  .doc-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .doc-logo {
+    height: 36px;
+  }
+
+  .doc-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .doc-meta-item .label {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .doc-meta-item .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  /* ── DOC: PLAN TITLE ── */
+  .doc-plan-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-brand);
+    margin-bottom: 4px;
+  }
+
+  .doc-plan-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 20px;
+  }
+
+  /* ── DOC: CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .cards-grid.two-cards { grid-template-columns: 1fr 1fr; }
+  .cards-grid.one-card { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto 16px; }
+
+  /* ── DOC: PLAN CARD ── */
+  .plan-card {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .plan-card-header {
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .plan-card-header.elite { background: var(--green-dark); }
+  .plan-card-header.simples { background: var(--green-dark); }
+  .plan-card-header.destacados { background: #7a5c00; }
+  .plan-card-header.prime { background: var(--blue-dark); }
+
+  .plan-card-header-left { display: flex; align-items: center; gap: 8px; }
+
+  .plan-card-icon {
+    font-size: 16px;
+  }
+
+  .plan-card-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: white;
+  }
+
+  .plan-card-desc {
+    font-size: 10px;
+    color: rgba(255,255,255,.75);
+    margin-top: 1px;
+    max-width: 160px;
+    line-height: 1.3;
+  }
+
+  .plan-card-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 20px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .badge-recomendado {
+    background: white;
+    color: var(--green-dark);
+  }
+
+  .badge-complemento {
+    background: rgba(255,255,255,.25);
+    color: white;
+    border: 1px solid rgba(255,255,255,.4);
+  }
+
+  .plan-card-body {
+    padding: 16px;
+  }
+
+  /* ── DOC: PRICE ── */
+  .price-block { margin-bottom: 12px; }
+
+  .price-original {
+    font-size: 11px;
+    color: var(--red-price);
+    text-decoration: line-through;
+    display: inline;
+  }
+
+  .price-discount-pct {
+    font-size: 11px;
+    color: var(--success-green);
+    font-weight: 700;
+    display: inline;
+    margin-left: 4px;
+  }
+
+  .price-row { display: flex; align-items: baseline; gap: 3px; }
+
+  .price-main {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  .price-iva {
+    font-size: 10px;
+    color: #9ca3af;
+    font-weight: 500;
+  }
+
+  .price-no-discount { margin-top: 2px; }
+
+  .inventory-label {
+    font-size: 11px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .inventory-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green-brand);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* ── DOC: FEATURES ── */
+  .features-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+  .features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11px;
+    color: #374151;
+    line-height: 1.4;
+  }
+
+  .feature-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .feature-icon.green { background: var(--green-brand); }
+  .feature-icon.gold { background: var(--gold-mid); }
+  .feature-icon.blue { background: var(--blue-light); }
+
+  .feature-icon svg { width: 8px; height: 8px; }
+
+  .avisos-label {
+    font-size: 11px;
+    color: #6b7280;
+    text-align: center;
+    margin: 8px 0 2px;
+  }
+
+  .avisos-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gold-mid);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .avisos-value.prime-color { color: var(--blue-light); }
+
+  /* ── DOC: TOTAL BOX ── */
+  .total-box {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    background: #fafafa;
+  }
+
+  .total-box-left .total-period {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 3px;
+  }
+
+  .total-box-left .total-desc {
+    font-size: 12px;
+    color: #374151;
+    font-weight: 500;
+  }
+
+  .total-box-right { text-align: right; }
+
+  .total-amount {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green-dark);
+  }
+
+  .total-iva {
+    font-size: 10px;
+    color: #9ca3af;
+  }
+
+  /* ── DOC: VIGENCIA ── */
+  .vigencia-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .vigencia-icon { font-size: 18px; }
+
+  .vigencia-text {
+    font-size: 13px;
+    color: var(--green-mid);
+    font-weight: 500;
+  }
+
+  .vigencia-text span { font-weight: 700; }
+
+  /* ── DOC: SEPARATOR ── */
+  .section-sep {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 24px 0 20px;
+  }
+
+  .opcion-adicional-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 12px;
+  }
+
+  /* ── DOC: PAYMENT SECTION ── */
+  .payment-section { margin-top: 28px; }
+
+  .payment-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--green-brand);
+    margin-bottom: 10px;
+  }
+
+  .payment-subtitle {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 14px;
+  }
+
+  .payment-options {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .payment-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .payment-icon.blue { background: #dbeafe; }
+  .payment-icon.green { background: #dcfce7; }
+
+  .payment-option-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1px;
+  }
+
+  .payment-option-desc {
+    font-size: 11px;
+    color: #6b7280;
+  }
+
+  /* ── DOC: DISCLAIMER ── */
+  .disclaimer {
+    border-left: 3px solid var(--green-light);
+    padding: 10px 14px;
+    background: #fafafa;
+    border-radius: 0 6px 6px 0;
+    font-size: 11px;
+    color: #374151;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .disclaimer strong { font-weight: 700; color: #111827; }
+
+  /* ── DOC: FOOTER ── */
+  .doc-footer {
+    background: var(--green-dark);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .doc-footer-left .footer-site { font-size: 13px; font-weight: 700; color: white; }
+  .doc-footer-left .footer-desc { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 1px; }
+
+  .footer-cta {
+    background: var(--green-light);
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* ── SCROLLBAR ── */
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+  @media print {
+    .sidebar, .preview-label, .preview-area > *:not(#proposal-doc) { display: none !important; }
+    .app { grid-template-columns: 1fr; }
+    .preview-area { background: white; padding: 0; }
+    #proposal-doc { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="20" fill="#1a3a2a"/>
+          <path d="M12 26V16l8-4 8 4v10l-8 4-8-4z" fill="none" stroke="#52b788" stroke-width="1.5"/>
+          <circle cx="20" cy="20" r="3" fill="#52b788"/>
+        </svg>
+        <span class="sidebar-logo-text">Propiedades.com</span>
+      </div>
+      <div class="sidebar-subtitle">Generador de Propuestas</div>
+    </div>
+
+    <!-- PLAN -->
+    <div class="form-section">
+      <div class="section-label">Plan</div>
+      <div class="field">
+        <label>Tipo de Plan</label>
+        <select id="sel-plan">
+          <option value="">— Selecciona un plan —</option>
+          <optgroup label="Plan Elite">
+            <option value="elite-300">Elite · Inventario 300</option>
+            <option value="elite-500">Elite · Inventario 500</option>
+            <option value="elite-500plus">Elite · Inventario +500</option>
+          </optgroup>
+          <optgroup label="Plan Simples">
+            <option value="simples-10">Simples · 10 avisos</option>
+            <option value="simples-40">Simples · 40 avisos</option>
+            <option value="simples-80">Simples · 80 avisos</option>
+            <option value="simples-140">Simples · 140 avisos</option>
+            <option value="simples-300">Simples · 300 avisos</option>
+            <option value="simples-500plus">Simples · +300 avisos</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ciudad del cliente</label>
+        <select id="sel-ciudad">
+          <option value="CDMX">CDMX</option>
+          <option value="EDOMEX">EDOMEX</option>
+          <option value="Jalisco">Jalisco</option>
+          <option value="Nuevo León">Nuevo León</option>
+          <option value="Querétaro">Querétaro</option>
+          <option value="Toluca">Toluca</option>
+          <option value="Resto del país">Resto del país</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Descuento al plan (%)</label>
+        <input type="number" id="inp-plan-desc" min="0" max="100" placeholder="0">
+      </div>
+    </div>
+
+    <!-- PERIODO -->
+    <div class="form-section">
+      <div class="section-label">Periodo</div>
+      <div class="period-group">
+        <button class="period-btn active" data-period="anual">Anual</button>
+        <button class="period-btn" data-period="semestral">Semestral</button>
+        <button class="period-btn" data-period="ambos">Ambos</button>
+      </div>
+    </div>
+
+    <!-- COMPLEMENTOS -->
+    <div class="form-section">
+      <div class="section-label">Complementos</div>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-name">Destacados</span>
+          <span class="toggle-desc">Posicionamiento premium dorado</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-destacados">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="complement-fields" id="fields-destacados">
+        <div class="field-row">
+          <div class="field">
+            <label>Cant. avisos</label>
+            <input type="number" id="inp-dest-qty" min="1" max="200" placeholder="5" value="5">
+          </div>
+          <div class="field">
+            <label>Descuento (%)</label>
+            <input type="number" id="inp-dest-desc" min="0" max="100" placeholder="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-name">Prime</span>
+          <span class="toggle-desc">Posicionamiento premium azul</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="tog-prime">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="complement-fields" id="fields-prime">
+        <div class="field-row">
+          <div class="field">
+            <label>Cant. avisos</label>
+            <input type="number" id="inp-prime-qty" min="1" max="200" placeholder="5" value="5">
+          </div>
+          <div class="field">
+            <label>Descuento (%)</label>
+            <input type="number" id="inp-prime-desc" min="0" max="100" placeholder="0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTE -->
+    <div class="form-section">
+      <div class="section-label">Datos del cliente</div>
+      <div class="field">
+        <label>Cliente / Empresa</label>
+        <input type="text" id="inp-cliente" placeholder="Ej. Novaland Bienes Raíces">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Inventario</label>
+          <input type="number" id="inp-inventario" placeholder="300">
+        </div>
+        <div class="field">
+          <label>Ciudad</label>
+          <input type="text" id="inp-ciudad-display" placeholder="Toluca">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Fecha propuesta</label>
+          <input type="date" id="inp-fecha">
+        </div>
+        <div class="field">
+          <label>Vigencia</label>
+          <input type="date" id="inp-vigencia">
+        </div>
+      </div>
+    </div>
+
+    <button class="export-btn" onclick="exportPDF()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/>
+      </svg>
+      Exportar PDF
+    </button>
+  </aside>
+
+  <!-- ══════════ PREVIEW ══════════ -->
+  <main class="preview-area">
+    <div class="preview-label">Vista previa de la propuesta</div>
+
+    <div id="proposal-doc">
+      <!-- Rendered by JS -->
+    </div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
