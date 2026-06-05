@@ -403,8 +403,19 @@ function exportPDF() {
     margin: 0,
     filename: filename,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, logging: false },
-    jsPDF: { unit: 'px', format: [794, element.scrollHeight + 40], orientation: 'portrait' }
+    html2canvas: { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false,
+      scrollY: 0,
+      windowWidth: 794
+    },
+    jsPDF: { 
+      unit: 'px', 
+      format: [794, element.scrollHeight], 
+      orientation: 'portrait',
+      hotfixes: ['px_scaling']
+    }
   };
 
   html2pdf().set(opt).from(element).save();
