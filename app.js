@@ -121,7 +121,8 @@ function planCardHTML(prices, periodo, isMain) {
   const planDesc = isElite
     ? 'Publicaciones con etiqueta Exclusivo · Primeros resultados de búsqueda'
     : 'Publicaciones en los primeros resultados de búsqueda';
-  const inv = state.inventario || '—';
+  const niveles = { 'elite-300':300, 'elite-500':500, 'elite-500plus':'+500', 'simples-10':10, 'simples-40':40, 'simples-80':80, 'simples-140':140, 'simples-300':300, 'simples-500plus':'+300' };
+  const inv = state.plan ? niveles[state.plan] : '—';
   const p = prices.plan;
   const hasBothCols = prices.comp !== null;
   const cardClass = isElite ? 'elite' : 'simples';
