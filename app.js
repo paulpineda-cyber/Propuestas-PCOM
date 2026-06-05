@@ -399,22 +399,26 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  const styleOverride = document.createElement('style');
-  styleOverride.id = 'pdf-override';
-  styleOverride.innerHTML = `
-    #proposal-doc {
-      width: 794px !important;
-      transform: none !important;
-      margin: 0 !important;
-      padding: 48px 56px 56px !important;
-      position: static !important;
-      left: auto !important;
-    }
+  // Guardar estilos originales
+  const originalStyle = element.getAttribute('style') || '';
+
+  // Forzar estilos correctos directamente en el elemento
+  element.style.cssText = `
+    width: 794px !important;
+    transform: none !important;
+    transform-origin: top left !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 48px 56px 56px !important;
+    position: static !important;
+    left: auto !important;
+    box-shadow: none !important;
   `;
-  document.head.appendChild(styleOverride);
 
   setTimeout(() => {
     const height = element.scrollHeight;
+
     const opt = {
       margin: 0,
       filename: filename,
@@ -427,8 +431,6 @@ function exportPDF() {
         scrollY: 0,
         windowWidth: 794,
         windowHeight: height,
-        x: 0,
-        y: 0,
         width: 794,
         height: height
       },
@@ -440,7 +442,8 @@ function exportPDF() {
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-      document.getElementById('pdf-override').remove();
+      // Restaurar estilo original
+      element.setAttribute('style', originalStyle);
     });
   }, 300);
 }
