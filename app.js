@@ -256,7 +256,8 @@ function render() {
   const doc = document.getElementById('proposal-doc');
 
   const cliente = state.cliente || 'Cliente';
-  const inventario = state.inventario || '—';
+  const invNiveles = { 'elite-300':300, 'elite-500':500, 'elite-500plus':'+500', 'simples-10':10, 'simples-40':40, 'simples-80':80, 'simples-140':140, 'simples-300':300, 'simples-500plus':'+300' };
+  const inventario = state.plan ? invNiveles[state.plan] : '—';
   const ciudadDisp = state.ciudadDisplay || state.ciudad;
   const fechaStr = state.fecha ? fmtDate(state.fecha) : '—';
   const vigenciaStr = state.vigencia ? fmtDate(state.vigencia) : '—';
