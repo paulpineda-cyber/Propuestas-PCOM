@@ -353,11 +353,14 @@
 
   /* ── DOC: PLAN CARD ── */
 .plan-card {
-    border: 1.5px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
+    box-shadow: 0 15px 41px rgba(0,0,0,0.20);
   }
+
+.plan-card.elite-card   { border: 2.28px solid #71BD86; }
+.plan-card.destacados-card { border: 2.28px solid #DDC88F; }
+.plan-card.prime-card   { border: 2.28px solid #8FB7DD; }
 
   .plan-card-header {
     padding: 14px 16px 12px;
@@ -366,10 +369,10 @@
     justify-content: space-between;
   }
 
-.plan-card-header.elite { background: linear-gradient(135deg, #1a3a2a 0%, #2d6a4f 100%); }
-.plan-card-header.simples { background: linear-gradient(135deg, #1a3a2a 0%, #2d6a4f 100%); }
-.plan-card-header.destacados { background: linear-gradient(135deg, #7a5c00 0%, #b8860b 100%); }
-.plan-card-header.prime { background: linear-gradient(135deg, #1a2a4a 0%, #2563eb 100%); }
+.plan-card-header.elite    { background: linear-gradient(180deg, #104421 0%, #268543 100%); }
+.plan-card-header.simples  { background: linear-gradient(180deg, #104421 0%, #268543 100%); }
+.plan-card-header.destacados { background: linear-gradient(180deg, #765509 0%, #CCB165 100%); }
+.plan-card-header.prime    { background: linear-gradient(180deg, #092F76 0%, #65B1CC 100%); }
 
   .plan-card-header-left { display: flex; align-items: center; gap: 8px; }
 
@@ -402,14 +405,21 @@
   }
 
   .badge-recomendado {
-    background: white;
-    color: var(--green-dark);
+    background: #65B1CC;
+    color: white;
+    border: 1px solid #FFFFFF;
   }
 
-  .badge-complemento {
-    background: rgba(255,255,255,.25);
+.badge-complemento-destacados {
+    background: #CDB269;
     color: white;
-    border: 1px solid rgba(255,255,255,.4);
+    border: 1px solid #FFFFFF;
+  }
+
+.badge-complemento-prime {
+    background: #69B2CD;
+    color: white;
+    border: 1px solid #FFFFFF;
   }
 
   .plan-card-body {
