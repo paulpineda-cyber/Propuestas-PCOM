@@ -399,7 +399,6 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  // Inyectar estilo temporal que anula el media query móvil
   const styleOverride = document.createElement('style');
   styleOverride.id = 'pdf-override';
   styleOverride.innerHTML = `
@@ -407,10 +406,13 @@ function exportPDF() {
       width: 794px !important;
       transform: none !important;
       margin: 0 !important;
-      padding: 48px 56px 56px !important;
+      position: relative !important;
+      left: 0 !important;
     }
   `;
   document.head.appendChild(styleOverride);
+
+  const height = element.scrollHeight;
 
   const opt = {
     margin: 0,
@@ -421,12 +423,13 @@ function exportPDF() {
       useCORS: true, 
       logging: false,
       scrollX: 0,
-      scrollY: -window.scrollY,
-      windowWidth: 1200
+      scrollY: 0,
+      windowWidth: 794,
+      windowHeight: height
     },
     jsPDF: { 
-      unit: 'mm', 
-      format: 'a4', 
+      unit: 'px', 
+      format: [794, height], 
       orientation: 'portrait'
     }
   };
