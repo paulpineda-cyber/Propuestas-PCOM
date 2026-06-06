@@ -417,9 +417,10 @@ function exportPDF() {
       margin: 0,
       filename: filename,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 2,
+    html2canvas: {
+        scale: 3,
         useCORS: true,
+        allowTaint: true,
         logging: false,
         scrollX: 0,
         scrollY: 0,
@@ -429,6 +430,7 @@ function exportPDF() {
         height: height,
         x: 0,
         y: 0,
+        backgroundColor: '#ffffff',
         ignoreElements: (el) => el.classList.contains('sidebar') || el.classList.contains('preview-label')
       },
       jsPDF: {
