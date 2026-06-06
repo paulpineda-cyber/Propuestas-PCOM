@@ -421,12 +421,14 @@ function exportPDF() {
         scale: 2,
         useCORS: true,
         logging: false,
-        scrollX: 0,
-        scrollY: 0,
+        scrollX: -window.scrollX,
+        scrollY: -window.scrollY,
         windowWidth: 794,
         windowHeight: height,
         width: 794,
-        height: height
+        height: height,
+        x: element.getBoundingClientRect().left,
+        y: element.getBoundingClientRect().top
       },
       jsPDF: {
         unit: 'px',
