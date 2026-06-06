@@ -421,14 +421,15 @@ function exportPDF() {
         scale: 2,
         useCORS: true,
         logging: false,
-        scrollX: -window.scrollX,
-        scrollY: -window.scrollY,
+        scrollX: 0,
+        scrollY: 0,
         windowWidth: 794,
         windowHeight: height,
         width: 794,
         height: height,
-        x: element.getBoundingClientRect().left,
-        y: element.getBoundingClientRect().top
+        x: 0,
+        y: 0,
+        ignoreElements: (el) => el.classList.contains('sidebar') || el.classList.contains('preview-label')
       },
       jsPDF: {
         unit: 'px',
