@@ -399,25 +399,20 @@ function exportPDF() {
   const cliente = (state.cliente || 'propuesta').replace(/\s+/g, '_').toLowerCase();
   const filename = `propuesta_${cliente}_${state.fecha || 'hoy'}.pdf`;
 
-  const clone = element.cloneNode(true);
-  clone.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-    width: 794px;
-    padding: 48px 56px 56px;
-    background: white;
-    transform: none;
-    margin: 0;
-    z-index: -1;
-    font-family: 'Inter', sans-serif;
-  `;
-  document.body.appendChild(clone);
+  // Guardar estado actual
+  const prevTransform = element.style.transform;
+  const prevMarginLeft = element.style.marginLeft;
+  const prevMarginBottom = element.style.marginBottom;
+  const prevWidth = element.style.width;
+
+  // Forzar tamaño correcto
+  element.style.transform = 'none';
+  element.style.marginLeft = '0';
+  element.style.marginBottom = '0';
+  element.style.width = '794px';
 
   setTimeout(() => {
-    const height = clone.scrollHeight;
+    const height = element.scrollHeight;
     const opt = {
       margin: 0,
       filename: filename,
@@ -439,8 +434,13 @@ function exportPDF() {
         orientation: 'portrait'
       }
     };
-    html2pdf().set(opt).from(clone).save().then(() => {
-      document.body.removeChild(clone);
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Restaurar
+      element.style.transform = prevTransform;
+      element.style.marginLeft = prevMarginLeft;
+      element.style.marginBottom = prevMarginBottom;
+      element.style.width = prevWidth;
     });
-  }, 300);
+  }, 200);
 }
