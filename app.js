@@ -58,13 +58,11 @@ function bindEvents() {
   // Toggles
   document.getElementById('tog-destacados').addEventListener('change', e => {
     state.destacados = e.target.checked;
-    if (state.prime && state.destacados) { state.prime = false; document.getElementById('tog-prime').checked = false; document.getElementById('fields-prime').classList.remove('visible'); }
     document.getElementById('fields-destacados').classList.toggle('visible', state.destacados);
     render();
   });
   document.getElementById('tog-prime').addEventListener('change', e => {
     state.prime = e.target.checked;
-    if (state.destacados && state.prime) { state.destacados = false; document.getElementById('tog-destacados').checked = false; document.getElementById('fields-destacados').classList.remove('visible'); }
     document.getElementById('fields-prime').classList.toggle('visible', state.prime);
     render();
   });
@@ -85,21 +83,21 @@ function bindEvents() {
 
 // ── Price computation ─────────────────────────
 function computePrices(periodo) {
-  if (!state.plan) return null;
+  if (!state.plan && !state.destacados && !state.prime) return null;
 
-  const isElite = state.plan.startsWith('elite');
-  let planBase;
+ const isElite = state.plan ? state.plan.startsWith('elite') : false;
+  let planBase = 0;
 
-  if (isElite) {
+  if (state.plan && isElite) {
     const inv = state.plan === 'elite-300' ? 300 : state.plan === 'elite-500' ? 500 : 501;
     planBase = getPrecioElite(state.ciudad, inv, periodo);
-  } else {
+  } else if (state.plan) {
     const niveles = { 'simples-10':10, 'simples-40':40, 'simples-80':80, 'simples-140':140, 'simples-300':300, 'simples-500plus':500 };
     const nivel = niveles[state.plan] || 300;
     planBase = getPrecioSimples(nivel, periodo);
   }
 
-  const plan = applyDiscount(planBase, state.planDesc);
+  const plan = state.plan ? applyDiscount(planBase, state.planDesc) : null;
 
   let comp = null;
   if (state.destacados) {
