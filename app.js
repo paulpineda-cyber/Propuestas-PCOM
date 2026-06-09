@@ -276,8 +276,8 @@ function render() {
   else periodoLabel = 'Semestral y Anual';
 
   const mainPeriodo = state.periodo === 'ambos' ? 'semestral' : state.periodo;
-  const prices = state.plan ? computePrices(mainPeriodo) : null;
-  const pricesAnual = (state.periodo === 'ambos' && state.plan) ? computePrices('anual') : null;
+  const prices = (state.plan || state.destacados || state.prime) ? computePrices(mainPeriodo) : null;
+  const pricesAnual = (state.periodo === 'ambos' && (state.plan || state.destacados || state.prime)) ? computePrices('anual') : null;
 
   const planTitle = state.plan
     ? `Plan ${planType} ${state.periodo === 'ambos' ? 'Semestral' : periodoLabel}${compType}`
