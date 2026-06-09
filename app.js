@@ -100,16 +100,18 @@ function computePrices(periodo) {
   const plan = state.plan ? applyDiscount(planBase, state.planDesc) : null;
 
   let comp = null;
+  let comp2 = null;
   if (state.destacados) {
     const base = getPrecioDestacados(state.destQty, periodo);
     comp = { type: 'destacados', qty: state.destQty, ...applyDiscount(base, state.destDesc) };
-  } else if (state.prime) {
+  }
+  if (state.prime) {
     const base = getPrecioPrime(state.primeQty, periodo);
-    comp = { type: 'prime', qty: state.primeQty, ...applyDiscount(base, state.primeDesc) };
+    comp2 = { type: 'prime', qty: state.primeQty, ...applyDiscount(base, state.primeDesc) };
   }
 
-  const total = plan.final + (comp ? comp.final : 0);
-  return { plan, comp, total };
+  const total = (plan ? plan.final : 0) + (comp ? comp.final : 0) + (comp2 ? comp2.final : 0);
+  return { plan, comp, comp2, total };
 }
 
 // ── Build plan card HTML ──────────────────────
@@ -218,10 +220,14 @@ function totalBoxHTML(prices, periodo) {
   const planName = isElite ? 'Plan Elite' : 'Plan Simples';
   const months = periodo === 'anual' ? 12 : 6;
   const periodLabel = periodo === 'anual' ? 'ANUAL' : 'SEMESTRAL';
-  let desc = `${planName} por ${months} meses`;
+  let desc = state.plan ? `${planName} por ${months} meses` : '';
   if (prices.comp) {
     const compName = prices.comp.type === 'destacados' ? 'avisos Destacados' : 'avisos Prime';
-    desc += ` + ${prices.comp.qty} ${compName} por ${months} meses`;
+    desc += (desc ? ' + ' : '') + `${prices.comp.qty} ${compName} por ${months} meses`;
+  }
+  if (prices.comp2) {
+    const comp2Name = prices.comp2.type === 'destacados' ? 'avisos Destacados' : 'avisos Prime';
+    desc += (desc ? ' + ' : '') + `${prices.comp2.qty} ${comp2Name} por ${months} meses`;
   }
   return `
   <div class="total-box">
@@ -262,7 +268,7 @@ function render() {
 
   const isElite = state.plan.startsWith('elite');
   const planType = isElite ? 'Elite' : 'Simples';
-  const compType = state.destacados ? ' + Destacados' : state.prime ? ' + Prime' : '';
+  const compType = (state.destacados && state.prime) ? ' + Destacados + Prime' : state.destacados ? ' + Destacados' : state.prime ? ' + Prime' : '';
 
   let periodoLabel = '';
   if (state.periodo === 'anual') periodoLabel = 'Anual';
@@ -282,11 +288,13 @@ function render() {
   // Cards layout
   let mainSection = '';
   if (prices) {
-    const gridClass = prices.comp ? 'two-cards' : 'one-card';
+    const cardCount = (state.plan ? 1 : 0) + (prices.comp ? 1 : 0) + (prices.comp2 ? 1 : 0);
+    const gridClass = cardCount > 1 ? 'two-cards' : 'one-card';
     mainSection = `
       <div class="cards-grid ${gridClass}">
-        ${planCardHTML(prices, mainPeriodo, true)}
+        ${state.plan ? planCardHTML(prices, mainPeriodo, true) : ''}
         ${compCardHTML(prices.comp)}
+        ${compCardHTML(prices.comp2)}
       </div>
       ${totalBoxHTML(prices, mainPeriodo)}`;
   } else {
@@ -303,8 +311,9 @@ function render() {
       <div class="doc-plan-label">Plan Recomendado</div>
       <div class="doc-plan-title">Plan ${planType} Anual${compType}</div>
       <div class="cards-grid ${gridClass}">
-        ${planCardHTML(pricesAnual, 'anual', false)}
+        ${state.plan ? planCardHTML(pricesAnual, 'anual', false) : ''}
         ${compCardHTML(pricesAnual.comp)}
+        ${compCardHTML(pricesAnual.comp2)}
       </div>
       ${totalBoxHTML(pricesAnual, 'anual')}`;
   }
