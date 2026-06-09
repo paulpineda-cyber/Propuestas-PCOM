@@ -289,7 +289,7 @@ function render() {
   let mainSection = '';
   if (prices) {
     const cardCount = (state.plan ? 1 : 0) + (prices.comp ? 1 : 0) + (prices.comp2 ? 1 : 0);
-    const gridClass = cardCount > 1 ? 'two-cards' : 'one-card';
+    const gridClass = cardCount === 3 ? 'three-cards' : cardCount > 1 ? 'two-cards' : 'one-card';
     mainSection = `
       <div class="cards-grid ${gridClass}">
         ${state.plan ? planCardHTML(prices, mainPeriodo, true) : ''}
