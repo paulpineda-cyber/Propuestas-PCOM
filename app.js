@@ -304,7 +304,8 @@ function render() {
   // Second section (if "Ambos")
   let secondSection = '';
   if (hasBoth && pricesAnual) {
-    const gridClass = pricesAnual.comp ? 'two-cards' : 'one-card';
+    const cardCountAnual = (state.plan ? 1 : 0) + (pricesAnual.comp ? 1 : 0) + (pricesAnual.comp2 ? 1 : 0);
+    const gridClass = cardCountAnual === 3 ? 'three-cards' : cardCountAnual > 1 ? 'two-cards' : 'one-card';
     secondSection = `
       <hr class="section-sep">
       <div class="opcion-adicional-label">OPCIÓN ADICIONAL</div>
