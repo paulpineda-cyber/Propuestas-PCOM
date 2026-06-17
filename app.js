@@ -197,6 +197,7 @@ function compCardHTML(comp) {
   </div>`;
 }
 
+/*
 function priceBlockHTML(p) {
   if (p.original) {
     return `
@@ -204,13 +205,17 @@ function priceBlockHTML(p) {
         <div><span class="price-original">${fmt(p.original)}</span> <span class="price-discount-pct">| ${p.pct}% de Descuento</span></div>
         <div class="price-row"><span class="price-main">${fmt(p.final)}</span><span class="price-iva">+IVA</span></div>
       </div>`;
-  }
   return `
     <div class="price-block price-no-discount">
       <div class="price-row"><span class="price-main">${fmt(p.final)}</span><span class="price-iva">+IVA</span></div>
     </div>`;
+}*/
+function priceBlockHTML(p) {
+  return `
+    <div class="price-block">
+      <div class="price-row"><span class="price-main">${fmt(p.final)}</span><span class="price-iva">+IVA</span></div>
+    </div>`;
 }
-
 function checkSVG() {
   return `<svg viewBox="0 0 10 10" fill="white"><path d="M2 5l2.5 2.5L8 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
