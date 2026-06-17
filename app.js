@@ -208,7 +208,8 @@ function priceBlockHTML(p) {
     <div class="price-block price-no-discount">
       <div class="price-row"><span class="price-main">${fmt(p.final)}</span><span class="price-iva">+IVA</span></div>
     </div>`;
-}/*
+}
+  /*
 function priceBlockHTML(p) {
   return `
     <div class="price-block">
